@@ -1,5 +1,5 @@
-\documentclass[12pt,letter]{report}
-%\usepackage[utf8]{inputenc}
+\documentclass[12pt,letter]{article}
+\usepackage{amsmath,amssymb,amsthm,epsfig,rotfloat,psfrag,natbib}
 
 %% fonts
 \usepackage[charter]{mathdesign}
@@ -11,17 +11,28 @@
 
 \usepackage{lineno, natbib}
 
-%%% for memisc
-%\usepackage{booktabs}
-%\usepackage{dcolumn} 
-
-%%% define a dark blue
-%\usepackage{color}
-%\definecolor{darkblue}{rgb}{0,0,.5} 
-%
-%%% hyperlinks to references
-%\usepackage{hyperref}
-%\hypersetup{colorlinks=true, linkcolor=darkblue, citecolor=darkblue, filecolor=darkblue, urlcolor=darkblue}
+%% Some term shortcuts
+\newcommand{\Nst}{\ensuremath{N_{st}}}
+\newcommand{\nst}{\ensuremath{n_{st}}}
+\newcommand{\zst}{\ensuremath{z_{st}}}
+\newcommand{\yst}{\ensuremath{y_{st}}}
+\newcommand{\ms}{\ensuremath{s}}
+\newcommand{\mt}{\ensuremath{t}}
+\newcommand{\fT}{\ensuremath{\mathcal{T}}}
+\newcommand{\fTp}{\ensuremath{\mathcal{T}^+}}
+\newcommand{\by}{\ensuremath{\mathbf{y}}}
+\newcommand{\bz}{\ensuremath{\mathbf{z}}}
+\newcommand{\bX}{\ensuremath{\mathbf{X}}}
+\newcommand{\bx}{\ensuremath{\mathbf{x}}}
+\newcommand{\bM}{\ensuremath{\mathbf{M}}}
+\newcommand{\bT}{\ensuremath{\mathbf{T}}}
+\newcommand{\bb}{\ensuremath{\boldsymbol{\beta}}}
+\newcommand{\ba}{\ensuremath{\boldsymbol{\alpha}}}
+\newcommand{\beps}{\ensuremath{\boldsymbol{\epsilon}}}
+\newcommand{\bn}{\ensuremath{\boldsymbol{\eta}}}
+\newcommand{\bd}{\ensuremath{\boldsymbol{\delta}}}
+\newcommand{\bphi}{\ensuremath{\boldsymbol{\phi}}}
+\newcommand{\bg}{\ensuremath{\boldsymbol{\gamma}}}
 
 \begin{document}
 \begin{center}
@@ -46,7 +57,7 @@ WA 98115 USA }\\ \medskip
 
 \centerline{\sc Introduction}
 
-Estimating ``trends'' from survey data has a long standing tradition in ecology and resource management. Estimates of trends are often used to inform resource management decisions, invoke resource protection measures, or remove resource protection measures after satisfactory growth in abundance of a population has been reached. The term, ``trend,'' is a nebulous concept, however, with changing definition depending on the situation at hand. In the broadest sense, a trend, is simply the change in abundance over a specified time interval, of which both components may change depending on the question being asked of the data.   
+Estimating ``trends'' from survey data has a long standing tradition in ecology and resource management. Estimates of trends are often used to inform resource management decisions, invoke resource protection measures, or remove resource protection measures after satisfactory growth in abundance of a population has been reached. The term, ``trend,'' is a nebulous concept, however, with changing definition depending on the situation at hand. In the broadest sense, a trend, is simply the change in abundance over a specified time interval. , of which both components may change depending on the question being asked of the data.   
 
 ...
 
@@ -56,9 +67,38 @@ The work presented here is motivated by on-going monitoring of two marine mammal
    
 \centerline{\sc Methods}
 
+To begin the description of the general framework, we need to provide some notational background. The backbone of trend estimation is the true abundance at a given site and time. We recognize the fact that truth, when it comes to abundance at a given point in space and time, is a nebulous concept that will have different meaning depending on the species of interest. Nevertheless, we assume that there is some concept of a true abundance. We denote $\Nst$ as this true abundance at site $s$ and time $t$ and $\zst=\log(\Nst)$. The time span for which we are interested in estimating trend will be denoted $\fT$. There may be data outside of this interval that might inform the change in abundance over $\fT$, we will denote this extended time span as $\fTp$. Now, in order to estimate trend, a subset of sites are surveyed (censused or sampled) at a subset of times in $\fTp$. We denote $\nst$ as the surveyed abundance at site $s$ and time $t$. There may or may not be systematic or random deviations of $\nst$ from $\Nst$. The log-scale value of the surveyed abundance is $\yst=\log(\nst)$.  
+
+
+
+
+
 \centerline{\sc Case study: Harbor seal survey}
 
 \centerline{\sc Case study: Steller sea lion survey}
+
+\begin{equation}
+y_{st} = \left\{
+	\begin{array}{ll} 
+	\bx_{st}'\bg + z_{st} + \epsilon_{st} & \mbox{if } z_{st}>0\\
+	0 & \mbox{if } z_{st}=0
+	\end{array}\right.,
+\end{equation}
+where 
+
+\centerline{and}
+\begin{equation}
+z_{st} = \left\{
+	\begin{array}{ll}
+		\beta_{0s} + \beta_{1s}t + \eta_{st} + \delta_{st} & \mbox{with prob. } p_{st}\\
+		0 & \mbox{with prob. } 1-p_{st}
+	\end{array}\right.
+\end{equation}
+
+\begin{equation}
+\mbox{probit}(p_{st}) = \theta_{0s} + \theta_{1s}t + \alpha_{st}
+\end{equation}
+
 
 \centerline{\sc Discussion}
 
