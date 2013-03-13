@@ -20,6 +20,8 @@
 \newcommand{\mt}{\ensuremath{t}}
 \newcommand{\fT}{\ensuremath{\mathcal{T}}}
 \newcommand{\fTp}{\ensuremath{\mathcal{T}^+}}
+\newcommand{\bNT}{\ensuremath{\mathbf{N}_\mathcal{T}}}
+
 \newcommand{\by}{\ensuremath{\mathbf{y}}}
 \newcommand{\bz}{\ensuremath{\mathbf{z}}}
 \newcommand{\bX}{\ensuremath{\mathbf{X}}}
@@ -59,7 +61,7 @@ WA 98115 USA }\\ \medskip
 
 Estimating ``trends'' from survey data has a long standing tradition in ecology and resource management. Estimates of trends are often used to inform resource management decisions, invoke resource protection measures, or remove resource protection measures after satisfactory growth in abundance of a population has been reached. The term, ``trend,'' is a nebulous concept, however, with changing definition depending on the situation at hand. In the broadest sense, a trend, is simply the change in abundance over a specified time interval. , of which both components may change depending on the question being asked of the data.   
 
-Jay testing use of GIT; here is a bit of changed text..
+Jay testing use of GIT; here is a bit of changed text.. {\bf <- Saw this, so, everything seems to be working with git.}
 
 ...
 
@@ -67,22 +69,29 @@ The work presented here is motivated by on-going monitoring of two marine mammal
 
 ...
    
-\centerline{\sc Methods}
+\section{Methods}
 
-To begin the description of the general framework, we need to provide some notational background. The backbone of trend estimation is the true abundance at a given site and time. We recognize the fact that truth, when it comes to abundance at a given point in space and time, is a nebulous concept that will have different meaning depending on the species of interest. Nevertheless, we assume that there is some concept of a true abundance. We denote $\Nst$ as this true abundance at site $s$ and time $t$ and $\zst=\log(\Nst)$. The time span for which we are interested in estimating trend will be denoted $\fT$. There may be data outside of this interval that might inform the change in abundance over $\fT$, we will denote this extended time span as $\fTp$. Now, in order to estimate trend, a subset of sites are surveyed (censused or sampled) at a subset of times in $\fTp$. We denote $\nst$ as the surveyed abundance at site $s$ and time $t$. There may or may not be systematic or random deviations of $\nst$ from $\Nst$. The log-scale value of the surveyed abundance is $\yst=\log(\nst)$.  
+In this section we present a general approach for estimating trends from populatiions for whom abundance has been assessed by some survey method at several sites and times. The goal is to estimate the change in some function of abundance over a time span of interest. 
+
+\subsection{Notation}
+
+To begin the description of the general framework, we need to provide some notational background. The backbone of trend estimation is the true abundance at a given site and time. We recognize the fact that truth, when it comes to abundance at a given point in space and time, is a nebulous concept that will have different meaning depending on the species of interest. Nevertheless, we assume that there is some concept of a true abundance. We denote $\Nst$ as this true abundance at site $s$ and time $t$ and $\zst=\log(\Nst)$. The time span for which we are interested in estimating trend will be denoted $\fT$. Thus, we will generally denote a trend as $\beta = f(\bNT, \fT)/h(\fT)$. For example, consider the average change in log abundance at a single site $r_t = [\sum_{i=1}^t(z_{i}-z_{i-1})]/t$ up to time $t$. The reader can see that $N_t = N_{0}\exp\{r_{t}t\}$, which is equivalent to $N_t = N_{0}\exp\{\beta t + \epsilon_{t}\}$, where $\beta=(1/T)\sum_{i=1}^T r_i$ and $\epsilon_{st}=z_t-\beta t$.
+
+There may be data outside of this interval that might inform the change in abundance over $\fT$, we will denote this extended time span as $\fTp$. Now, in order to estimate trend, a subset of sites are surveyed (censused or sampled) at a subset of times in $\fTp$. We denote $\nst$ as the surveyed abundance at site $s$ and time $t$. The log-scale value of the surveyed abundance is $\yst=\log(\nst)$. There may or may not be systematic or random deviations of $\nst$ from $\Nst$. For each $s$ and $t$ that sites are surveyed, there may exist covariates, say $\bx_{st}$, that can help account for these deviations. Similarly, there may be known or hypothesized drivers to abundances changes, say $\mathbf{d}_{st}$, that could be added to better predict true abundance where it is unknown.
+
+
+\subsection{Posterior predictive inference}
 
 
 
+\section{Case study: Harbor seal monitoring}
 
-
-\centerline{\sc Case study: Harbor seal survey}
-
-\centerline{\sc Case study: Steller sea lion survey}
+\section{Case study: Steller sea lion monitoring}
 
 \begin{equation}
 y_{st} = \left\{
 	\begin{array}{ll} 
-	\bx_{st}'\bg + z_{st} + \epsilon_{st} & \mbox{if } z_{st}>0\\
+	\bx_{st}'\bg + z_{st} & \mbox{if } z_{st}>0\\
 	0 & \mbox{if } z_{st}=0
 	\end{array}\right.,
 \end{equation}
@@ -102,6 +111,6 @@ z_{st} = \left\{
 \end{equation}
 
 
-\centerline{\sc Discussion}
+\section{Discussion}
 
 \end{document}
