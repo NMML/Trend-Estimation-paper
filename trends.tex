@@ -12,16 +12,17 @@
 \usepackage{lineno, natbib}
 
 %% Some term shortcuts
-\newcommand{\Nst}{\ensuremath{N_{st}}}
-\newcommand{\nst}{\ensuremath{n_{st}}}
-\newcommand{\zst}{\ensuremath{z_{st}}}
-\newcommand{\yst}{\ensuremath{y_{st}}}
+\newcommand{\Nij}{\ensuremath{N_{ij}}}
+\newcommand{\nij}{\ensuremath{n_{ij}}}
+\newcommand{\zij}{\ensuremath{z_{ij}}}
+\newcommand{\yij}{\ensuremath{y_{ij}}}
 \newcommand{\ms}{\ensuremath{s}}
 \newcommand{\mt}{\ensuremath{t}}
 \newcommand{\fT}{\ensuremath{\mathcal{T}}}
 \newcommand{\fTp}{\ensuremath{\mathcal{T}^+}}
 \newcommand{\bNT}{\ensuremath{\mathbf{N}_\mathcal{T}}}
-
+\newcommand{\bzi}{\ensuremath{\mathbf{z}_i}}
+\newcommand{\fN}{\ensuremath{\mathcal{N}}}
 \newcommand{\by}{\ensuremath{\mathbf{y}}}
 \newcommand{\bz}{\ensuremath{\mathbf{z}}}
 \newcommand{\bX}{\ensuremath{\mathbf{X}}}
@@ -75,40 +76,44 @@ In this section we present a general approach for estimating trends from populat
 
 \subsection{Notation}
 
-To begin the description of the general framework, we need to provide some notational background. The backbone of trend estimation is the true abundance at a given site and time. We recognize the fact that truth, when it comes to abundance at a given point in space and time, is a nebulous concept that will have different meaning depending on the species of interest. Nevertheless, we assume that there is some concept of a true abundance. We denote $\Nst$ as this true abundance at site $s$ and time $t$ and $\zst=\log(\Nst)$. The time span for which we are interested in estimating trend will be denoted $\fT$. Thus, we will generally denote a trend as $\beta = f(\bNT, \fT)/h(\fT)$. For example, consider the average change in log abundance at a single site $r_t = [\sum_{i=1}^t(z_{i}-z_{i-1})]/t$ up to time $t$. The reader can see that $N_t = N_{0}\exp\{r_{t}t\}$, which is equivalent to $N_t = N_{0}\exp\{\beta t + \epsilon_{t}\}$, where $\beta=(1/T)\sum_{i=1}^T r_i$ and $\epsilon_{st}=z_t-\beta t$.
+To begin the description of the general framework, we need to provide some notational background. The backbone of trend estimation is the true abundance at a given site and time. We recognize the fact that truth, when it comes to abundance at a given point in space and time, is a nebulous concept that will have different meaning depending on the species of interest. Nevertheless, we assume that there is some concept of a true abundance. We denote $\Nij$ as this true abundance at site $i$ and time $t_j$ and $\zij=\log(\Nij)$. The time span for which we are interested in estimating trend will be denoted $\fT$. For simplicity, we will assume $\fT = \{t_1,\dots,t_T\}$. Thus, we will generally denote the trend of interest as $\tau$, which is some measure of change in change in abundance with respect to a change in times contained in $\fT$. For example we might calculate $\tau$ as the least-squares slope of $\bzi = (z_{i,t_1},\dots,z_{i,t_T})'$ with respect to $\fT$, or, $\tau$ might be the annual rate of population change, $(\Nij-N_{i,j-1})/N_{i,j-1}(t_j-t_{j-1})$, $j=1,\dots,T$, in which case, $\tau$ is a vector. In addition to what data exists within $\fT$, there may be data outside of this interval that might inform the change in abundance over $\fT$, we will denote this extended time span as $\fTp$.
 
-There may be data outside of this interval that might inform the change in abundance over $\fT$, we will denote this extended time span as $\fTp$. Now, in order to estimate trend, a subset of sites are surveyed (censused or sampled) at a subset of times in $\fTp$. We denote $\nst$ as the surveyed abundance at site $s$ and time $t$. The log-scale value of the surveyed abundance is $\yst=\log(\nst)$. There may or may not be systematic or random deviations of $\nst$ from $\Nst$. For each $s$ and $t$ that sites are surveyed, there may exist covariates, say $\bx_{st}$, that can help account for these deviations. Similarly, there may be known or hypothesized drivers to abundances changes, say $\mathbf{d}_{st}$, that could be added to better predict true abundance where it is unknown.
-
-
+ Now, in order to estimate trend, a subset of sites are surveyed (censused or sampled) at a subset of times in $\fTp$. We denote $\nij$ as the surveyed abundance at site $i$ and time $t_j$. The log-scale value of the surveyed abundance is $\yij=\log(\nij)$. There may or may not be systematic or random deviations of $\nij$ from $\Nij$. For each $i$ and $j$, there may exist covariates, say $\bx_{ij}$, that can help account for these deviations. Similarly, there may be known or hypothesized drivers to abundances changes, say $\mathbf{d}_{ij}$, that could be added to better predict true abundance where it is unknown. 
+ 
 \subsection{Posterior predictive inference}
 
+In this section we take a broad general approach without defining to many specifics as the research at-hand will dictate many details applicable to the population of interest. Following this section we illustrate two example case studies that have real conservation implications. Here, however, we seek to present a paradigm shift in the way ecologists consider estimating trends. 
+
+ 
 
 
 \section{Case study: Harbor seal monitoring}
 
 \section{Case study: Steller sea lion monitoring}
 
+The general model used to estimate Steller sea lion trends in the western Distinct Population Segment (wDPS) of the global Steller sea lion population is given by the following general model specification for each site. The observation model used was specified as,
 \begin{equation}
-y_{st} = \left\{
+n_{ij} = \left\{
 	\begin{array}{ll} 
-	\bx_{st}'\bg + z_{st} & \mbox{if } z_{st}>0\\
-	0 & \mbox{if } z_{st}=0
+	\exp\{x_j \gamma + z_{ij} + \epsilon_{ij}\}& \mbox{if } N_{ij}>0\\
+	0 & \mbox{if } N_{ij}=0
 	\end{array}\right.,
 \end{equation}
-where 
-
-\centerline{and}
+where $x_j$ is the indicator that $t_j < 2004$ and $[\epsilon_{ij}]=\fN(0,\sigma^2)$. The coefficient $\gamma$ adjusts for the fact that prior to the surveys conducted in 2004 photographs of sites were taken at oblique angles with handheld cameras, while in 2004 and after photographs were taken vertically at fixed altitude with medium format cameras. The medium format method produces higher counts on average than the oblique photo method. In this example, there are no replicated surveys, therefore, there is no information to estimate $\sigma$. Thus, we set it to a trivially small value $\approx 0$. Next, we model the $\Nij$ using the zero-inflated log-normal model:
 \begin{equation}
-z_{st} = \left\{
+N_{ij} = \left\{
 	\begin{array}{ll}
-		\beta_{0s} + \beta_{1s}t + \eta_{st} + \delta_{st} & \mbox{with prob. } p_{st}\\
-		0 & \mbox{with prob. } 1-p_{st}
-	\end{array}\right.
+		\exp\{\beta_{i0} + \beta_{i1}t + \eta_{ij} + \delta_{ij}\} & \mbox{with prob. } p_{ij}\\
+		0 & \mbox{with prob. } 1-p_{ij}
+	\end{array}\right.,
 \end{equation}
-
+where $\beta_{i0}$ and $\beta_{i1}$ are regression coefficients, $[\boldsymbol{\eta}_i|\xi] = \fN(\mathbf{0},\xi\mathbf{Q})$ is a random walk of order 2 (RW2; see \citealt{} for a definition of the precision matrix $\mathbf{Q}$), and $[\boldsymbol{\delta}_i|\zeta] = \fN(\mathbf{0},\zeta\mathbf{I})$. 
+To complete the model, the zero-inflation probability was specified as:
 \begin{equation}
-\mbox{probit}(p_{st}) = \theta_{0s} + \theta_{1s}t + \alpha_{st}
+\mbox{probit}(p_{ij}) = \theta_{i0} + \theta_{i1}t + \alpha_{ij},
 \end{equation}
+where $\theta_{i0}$ and $\theta_{i1}$ are linear coefficients and $[\boldsymbol{\alpha}_i|\phi] = \fN(\mathbf{0},\phi\mathbf{Q})$ is also a RW2 random vector. 
+
 
 
 \section{Discussion}
