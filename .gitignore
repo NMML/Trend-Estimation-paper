@@ -9,3 +9,5 @@
 *.out
 *.xml
 *.synctex.gz
+*.bbl
+*.blg
