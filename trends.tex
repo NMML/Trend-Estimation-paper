@@ -16,11 +16,10 @@
 \newcommand{\nij}{\ensuremath{n_{ij}}}
 \newcommand{\zij}{\ensuremath{z_{ij}}}
 \newcommand{\yij}{\ensuremath{y_{ij}}}
-\newcommand{\ms}{\ensuremath{s}}
-\newcommand{\mt}{\ensuremath{t}}
-\newcommand{\fT}{\ensuremath{\mathcal{T}}}
-\newcommand{\fTp}{\ensuremath{\mathcal{T}^+}}
-\newcommand{\bNT}{\ensuremath{\mathbf{N}_\mathcal{T}}}
+\newcommand{\dij}{\ensuremath{\mathbf{d}_{ij}}}
+\newcommand{\xij}{\ensuremath{\mathbf{x}_{ij}}}
+
+
 \newcommand{\bzi}{\ensuremath{\mathbf{z}_i}}
 \newcommand{\fN}{\ensuremath{\mathcal{N}}}
 \newcommand{\by}{\ensuremath{\mathbf{y}}}
@@ -41,7 +40,7 @@
 
 \begin{document}
 \begin{center}
-\Large A GENERAL FRAMEWORK FOR ESTIMATING ABUNDANCE TRENDS FROM ECOLOGICAL MONITORING DATA
+\Large A General Paradigm for Estimating Trends from Ecological Monitoring Data
 \bigskip\\
 \normalsize
 {\sc Jay M. Ver Hoef\footnotemark[1] and Devin S. Johnson}\smallskip\\
@@ -64,30 +63,50 @@ WA 98115 USA }\\ \medskip
 
 Estimating ``trends'' from survey data has a long standing tradition in ecology and resource management. Estimates of trends are often used to inform resource management decisions, invoke resource protection measures, or remove resource protection measures after satisfactory growth in abundance of a population has been reached. The term, ``trend,'' is a nebulous concept, however, with changing definition depending on the situation at hand. In the broadest sense, a trend, is simply the change in abundance over a specified time interval. , of which both components may change depending on the question being asked of the data.   
 
-Jay testing use of GIT; here is a bit of changed text.. {\bf <- Saw this, so, everything seems to be working with git.}
+...
+
+
+\citet{Link:2002zd} allude to this approach by characterizing a composite trend, but, fail to pursue this notion in general.
+
 
 ...
 
 The work presented here is motivated by on-going monitoring of two marine mammal species in Alaska, harbor seals ({\it Phoca vitulina}) and Steller sea lions ({\it Eumetopias jubatus}).
 
+Hierarchical or state-space models have become a popular framework for analyzing abundance trends...
+
 ...
    
 \section{Methods}
 
-In this section we present a general approach for estimating trends from populatiions for whom abundance has been assessed by some survey method at several sites and times. The goal is to estimate the change in some function of abundance over a time span of interest. 
+In this section we present a general approach for estimating trends from populations for whom abundance has been assessed by some survey method at several sites and times. The goal is to estimate the change in some function of abundance over a time span of interest. 
 
 \subsection{Notation}
 
-To begin the description of the general framework, we need to provide some notational background. The backbone of trend estimation is the true abundance at a given site and time. We recognize the fact that truth, when it comes to abundance at a given point in space and time, is a nebulous concept that will have different meaning depending on the species of interest. Nevertheless, we assume that there is some concept of a true abundance. We denote $\Nij$ as this true abundance at site $i$ and time $t_j$ and $\zij=\log(\Nij)$. The time span for which we are interested in estimating trend will be denoted $\fT$. For simplicity, we will assume $\fT = \{t_1,\dots,t_T\}$. Thus, we will generally denote the trend of interest as $\tau$, which is some measure of change in change in abundance with respect to a change in times contained in $\fT$. For example we might calculate $\tau$ as the least-squares slope of $\bzi = (z_{i,t_1},\dots,z_{i,t_T})'$ with respect to $\fT$, or, $\tau$ might be the annual rate of population change, $(\Nij-N_{i,j-1})/N_{i,j-1}(t_j-t_{j-1})$, $j=1,\dots,T$, in which case, $\tau$ is a vector. In addition to what data exists within $\fT$, there may be data outside of this interval that might inform the change in abundance over $\fT$, we will denote this extended time span as $\fTp$.
+To begin the description of the general framework, we need to provide some notational background. The backbone of trend estimation is the true abundance at a given site and time. We recognize the fact that truth, when it comes to abundance at a given point in space and time, is a nebulous concept that will have different meaning depending on the species of interest. Nevertheless, we assume that there is some concept of a true abundance. We denote $\Nij$ as this true abundance at site $s_i$ and time $t_j$ and $\zij=\log(\Nij)$. In addition, there may be known or hypothesized vector of drivers to abundance change, say $\mathbf{d}_{ij}$, that could be added to better predict true abundance where it is unknown. The set of times for which population growth is related will be denoted $T$. For simplicity, we will assume $T = \{t_1\dots,t_J\}$ is discrete, but we envision that the proposed method could certainly extend to continuous time spans.  The set of all sites will be denoted by $S = \{s_1,\dots,s_I\} $. Again, $S$ could be extended to a continuous spatial domain as well, we refrain here for convenience. The product space of all sites and times is $A = S \times T$.
 
- Now, in order to estimate trend, a subset of sites are surveyed (censused or sampled) at a subset of times in $\fTp$. We denote $\nij$ as the surveyed abundance at site $i$ and time $t_j$. The log-scale value of the surveyed abundance is $\yij=\log(\nij)$. There may or may not be systematic or random deviations of $\nij$ from $\Nij$. For each $i$ and $j$, there may exist covariates, say $\bx_{ij}$, that can help account for these deviations. Similarly, there may be known or hypothesized drivers to abundances changes, say $\mathbf{d}_{ij}$, that could be added to better predict true abundance where it is unknown. 
+To estimate trend, a subset of sites are surveyed (censused or sampled) at a subset of times. We denote $\nij$ as the surveyed abundance at site $s_i$ and time $t_j$. The set of surveyed sites and times is $B\subseteq A$. The log-scale value of the surveyed abundance is $\yij=\log(\nij)$. There may or may not be systematic or random deviations of $\nij$ from $\Nij$. For each $i$ and $j$, there may exist covariates, say $\bx_{ij}$, that can help account for these deviations. We use the notational convention that $\mathbf{N}_C$ represents a vector of all $\Nij$ such that $(s_i, t_j)$ are elements of the set $C$ of sites and time. If $C=A$ or $B$, we leave the subscript off, i.e., $\mathbf{n}_B = \mathbf{n}$, unless it is not clear from the context.
+
+We define a trend to be a function of the true abundances at a subset of sites relative to a specified set of times, say $\tau_C=\tau(\mathbf{N}, C)$. For example we might calculate $\tau_A$ as the least-squares slope of $\mathbf{z}$ with respect to $T$, or, $\tau_A$ might be the difference (derivative) rate of population change, $(\Nij/N_{i,j-1}) - (N_{i,j-1}/N_{i,j-2})$, $j=3,\dots,J$, in which case, $\tau_A$ is a vector. By defining trend in this fashion we consider trend to be a summary of abundance time-series not a parameter in a probabilistic model as it is traditionally. These two views are not mutually exclusive. For example, if 
  
-\subsection{Posterior predictive inference}
+\subsection{Bayesian inference for trends}
 
-In this section we take a broad general approach without defining to many specifics as the research at-hand will dictate many details applicable to the population of interest. Following this section we illustrate two example case studies that have real conservation implications. Here, however, we seek to present a paradigm shift in the way ecologists consider estimating trends. 
+In this section we take a broad general approach without defining to many specifics as the research at-hand will dictate many details applicable to the population of interest. Following this section we illustrate two example case studies that have real conservation implications. Here we seek to present a paradigm shift in the way ecologists consider estimating trends. 
+
+To estimate trends we begin with the general hierarchical model with the observation component denoted $[n_{ij}\ |\ \Nij,\xij, \varphi_o]$ and the process component denoted $[\Nij\ |\ \mathbf{N}_{A_{ij}},\dij,\varphi_p]$, where $A_{ij} = A\setminus (s_i,t_j)$, i.e., $A_{ij}$ is the set of all sites and times {\em except} $(s_i,t_j)$ We use the symbol $\varphi$ to generically denote a set of parameters. Note, here we assume that the observation, $\nij$, depends only on $\Nij$ and is independent of the true abundance at other sites and times, while, the true abundance is allowed to depend on, potentially, the true abundance at all other sites and times. The restriction on $\nij$ could be relaxed, but, we do not envision that situation as a widespread issue, so, we made that notational simplification. From this pair of models we can form the posterior distribution of $\Nij$ and any parameters using Bayes rule,
+\begin{equation}
+[\mathbf{N}, \varphi_o, \varphi_p\ |\ \mathbf{n}, \mathbf{x}, \mathbf{d}] \propto \prod_{(i,j)\in A}\left\{[n_{ij}\ |\ \Nij,\xij, \varphi_o]^{1_B(i,j)} [\Nij\ |\ \mathbf{N}_{A_{ij}}, \dij, \varphi_p]\right\}[\varphi_o, \varphi_p],
+\end{equation}
+where $1_B(i,j)$ is the indicator that $(s_i,t_j)$ is in the collection of surveyed sites and times, $B$ and $[\varphi_o, \varphi_p]$ is the prior distribution of $(\varphi_o, \varphi_p)$. Finally, the marginal posterior distribution of $\mathbf{N}$ is 
+\begin{equation}
+[\mathbf{N}|\mathbf{n}] \propto \int [\mathbf{N}, \varphi_o, \varphi_p\ |\ \mathbf{n}, \mathbf{x}, \mathbf{d}]d(\varphi_o,\varphi_p).\end{equation}
+The most straightforward method for summarizing properties of $[\mathbf{N}\ |\ \mathbf{n}]$ is using a method such as Markov chain Monte Carlo (MCMC; see \citealt{Givens:2005dy} for a general description) to obtain the posterior sample $\mathbf{N}^{(1)},\dots,\mathbf{N}^{(M)}$.  However, trends are our main focus. To approximate the posterior distribution of a trend, $[\tau(\mathbf{N})\ |\ \mathbf{n}]$, one need only apply the trend function to the abundance sample to obtain a sample from the posterior trend distribution. From the sample, $\tau(\mathbf{N}^{(1)}),\dots,\tau(\mathbf{N}^{(M)})$, one can approximate measures of central tendency, variance, credible intervals, etc.
+
+
+
+\subsection{Realized vs. predicted trend?}
 
  
-
 
 \section{Case study: Harbor seal monitoring}
 
