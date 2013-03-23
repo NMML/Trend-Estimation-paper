@@ -43,7 +43,7 @@
 \Large A General Paradigm for Estimating Trends from Ecological Monitoring Data
 \bigskip\\
 \normalsize
-{\sc Jay M. Ver Hoef\footnotemark[1] and Devin S. Johnson}\smallskip\\
+{\sc Jay M. Ver Hoef\footnotemark[1], Devin S. Johnson, and Lowell W. Fritz}\smallskip\\
 {\em National Marine Mammal Laboratory, NOAA\\
 7600 Sand Point Way NE, Seattle,
 WA 98115 USA }\\ \medskip
@@ -76,6 +76,11 @@ The work presented here is motivated by on-going monitoring of two marine mammal
 Hierarchical or state-space models have become a popular framework for analyzing abundance trends...
 
 ...
+
+ First, whether the trend was linear, quadratic, etc., mattered, and also whether the survey window was the last 15 year, 10 years, etc.  Secondly, it wasn't very stable.  Some small sites, even with fairly strong priors, would tend to "blow up."  That is, a site that changed from 0 to 1 in early 2000's might have estimates in the 100,000's by 2010; but then the Markov Chain would go back to near 0, so there was huge variability.  So, I opted for a more flexible form where trend is simply a temporally autocorrelated process.  However, this has no "parameters" that naturally estimate trend, so I ended up computing the simple linear regression (least squares for a line) on the the posterior distribution of the annual abundance estimates.  I did this for the last 5, 10, and 15 years.  I'm quite pleased with this approach.  It appears very stable and is completely flexible; allowing us to add years without having to reconsider an underlying trend model as we accumulate data.
+
+
+...
    
 \section{Methods}
 
@@ -93,47 +98,72 @@ We define a trend to be a function of the true abundances at a subset of sites r
 
 In this section we take a broad general approach without defining to many specifics as the research at-hand will dictate many details applicable to the population of interest. Following this section we illustrate two example case studies that have real conservation implications. Here we seek to present a paradigm shift in the way ecologists consider estimating trends. 
 
-To estimate trends we begin with the general hierarchical model with the observation component denoted $[n_{ij}\ |\ \Nij,\xij, \varphi_o]$ and the process component denoted $[\Nij\ |\ \mathbf{N}_{A_{ij}},\dij,\varphi_p]$, where $A_{ij} = A\setminus (s_i,t_j)$, i.e., $A_{ij}$ is the set of all sites and times {\em except} $(s_i,t_j)$ We use the symbol $\varphi$ to generically denote a set of parameters. Note, here we assume that the observation, $\nij$, depends only on $\Nij$ and is independent of the true abundance at other sites and times, while, the true abundance is allowed to depend on, potentially, the true abundance at all other sites and times. The restriction on $\nij$ could be relaxed, but, we do not envision that situation as a widespread issue, so, we made that notational simplification. From this pair of models we can form the posterior distribution of $\Nij$ and any parameters using Bayes rule,
+To estimate trends we begin with the general hierarchical model with the observation component denoted $[n_{ij}\ |\ \Nij,\xij, \varphi_o]$ and the process component denoted $[\Nij\ |\ \mathbf{N}_{A_{ij}},\dij,\varphi_p]$, where $A_{ij} = A\setminus (s_i,t_j)$, i.e., $A_{ij}$ is the set of all sites and times previous to $(s_i,t_j)$ We use the symbol $\varphi$ to generically denote a set of parameters. Note, here we assume that the observation, $\nij$, depends only on $\Nij$ and is independent of the true abundance at other sites and times, while, the true abundance is allowed to depend on, potentially, the true abundance at all other sites and times. The restriction on $\nij$ could be relaxed, but, we do not envision that situation as a widespread issue, so, we made that notational simplification. From this pair of models we can form the posterior distribution of $\Nij$ and any parameters using Bayes rule,
 \begin{equation}
 [\mathbf{N}, \varphi_o, \varphi_p\ |\ \mathbf{n}, \mathbf{x}, \mathbf{d}] \propto \prod_{(i,j)\in A}\left\{[n_{ij}\ |\ \Nij,\xij, \varphi_o]^{1_B(i,j)} [\Nij\ |\ \mathbf{N}_{A_{ij}}, \dij, \varphi_p]\right\}[\varphi_o, \varphi_p],
 \end{equation}
 where $1_B(i,j)$ is the indicator that $(s_i,t_j)$ is in the collection of surveyed sites and times, $B$ and $[\varphi_o, \varphi_p]$ is the prior distribution of $(\varphi_o, \varphi_p)$. Finally, the marginal posterior distribution of $\mathbf{N}$ is 
 \begin{equation}
 [\mathbf{N}|\mathbf{n}] \propto \int [\mathbf{N}, \varphi_o, \varphi_p\ |\ \mathbf{n}, \mathbf{x}, \mathbf{d}]d(\varphi_o,\varphi_p).\end{equation}
-The most straightforward method for summarizing properties of $[\mathbf{N}\ |\ \mathbf{n}]$ is using a method such as Markov chain Monte Carlo (MCMC; see \citealt{Givens:2005dy} for a general description) to obtain the posterior sample $\mathbf{N}^{(1)},\dots,\mathbf{N}^{(M)}$.  However, trends are our main focus. To approximate the posterior distribution of a trend, $[\tau(\mathbf{N})\ |\ \mathbf{n}]$, one need only apply the trend function to the abundance sample to obtain a sample from the posterior trend distribution. From the sample, $\tau(\mathbf{N}^{(1)}),\dots,\tau(\mathbf{N}^{(M)})$, one can approximate measures of central tendency, variance, credible intervals, etc.
+The most straightforward method for summarizing properties of $[\mathbf{N}\ |\ \mathbf{n}]$ is using a method such as Markov chain Monte Carlo (MCMC; see \citealt{Givens:2005dy} for a general description) to obtain the posterior sample $\mathbf{N}^{(1)},\dots,\mathbf{N}^{(M)}$.  However, trends are our main focus. To approximate the posterior distribution of a trend, $[\tau(\mathbf{N})\ |\ \mathbf{n}]$, one need only apply the trend function to the abundance sample to obtain a sample from the posterior trend distribution. From the sample, $\tau(\mathbf{N}^{(1)}),\dots,\tau(\mathbf{N}^{(M)})$, one can approximate measures of central tendency, variance, credible intervals, etc, using the empirical versions calculated from the sample.
 
 
 
-\subsection{Realized vs. predicted trend?}
+\subsection{Realized vs. predicted abundance?}
 
- 
+Here I think it would be good to discuss the benefits/differences between the posterior and posterior predictive versions of the method.
 
-\section{Case study: Harbor seal monitoring}
+The posterior predictive distribution of abundance is
+\begin{equation}
+[\mathbf{N}^{rep}|\mathbf{n}] \propto \int \prod_{(i,j)\in A}\left\{[\Nij^{rep}\ |\ \mathbf{N}_{A_{ij}}^{rep}, \dij, \varphi_p]\right\}[\varphi_p\ |\ \mathbf{n}, \mathbf{x}, \mathbf{d}]d\varphi_p,\end{equation} 
+where $\Nij^{rep}$ is the {\em replicated} abundance. 
+
+Sampling from the posterior predictive distribution usually involves only one additional step to the MCMC sampler mentioned previously. For  $\varphi_p^{(1)},\dots,\varphi_p^{(M)}$ 
+
 
 \section{Case study: Steller sea lion monitoring}
 
-The general model used to estimate Steller sea lion trends in the western Distinct Population Segment (wDPS) of the global Steller sea lion population is given by the following general model specification for each site. The observation model used was specified as,
+In this section we present estimation of current trends for the western Distinct Population Segment (wDPS) of Steller sea lions. The Steller sea lion is a pinniped that inhabits the North Pacific giving birth and breeding at terrestrial rookeries from California to Alaska and Russia \citep{}. The wDPS consists of those rookeries and haul-outs in Alaska west of 144$^\circ$ W longitude and is of considerable conservation interest due to its precipitous decline in the 1980s and subsequent failure to recover is some portions of its range \citep{}. Figure A1 illustrates the Steller sea lion sites of the wDPS.
+
+To develop conservation management plans for the wDPS trends for aggregations of counts are desired within 6 geographical regions \citep{}(see Fig. A1). That is to say, for a geographical region $S_r$, we would like to estimate the temporal trend of $\tilde N_{r1},\dots,\tilde N_{rT}$, where $\tilde N_{rj} = \sum_{s_i \in S_r} N_{ij}$. For this application we used data from $t_1=1990,\dots,t_{32}=2012$. Our goal is to summarize population growth over the interval 2000--2012, so, we considered the trend of interest, $\tau_C(\mathbf{N})$, to be the the least-squares linear slope of $\tilde z_{rj} = \log(\tilde N_{rj})$ where $C=\{(s_1,\dots,s_{204}) \times (2000,\dots,2012)\}$. 
+
+The observation model used was,
 \begin{equation}
-n_{ij} = \left\{
+[n_{ij}\ |\ \Nij,x_j, \gamma,\sigma] = \left\{
 	\begin{array}{ll} 
-	\exp\{x_j \gamma + z_{ij} + \epsilon_{ij}\}& \mbox{if } N_{ij}>0\\
+	\mathcal{L}(x_j \gamma + z_{ij}, \sigma^2)& \mbox{if } N_{ij}>0\\
 	0 & \mbox{if } N_{ij}=0
 	\end{array}\right.,
 \end{equation}
-where $x_j$ is the indicator that $t_j < 2004$ and $[\epsilon_{ij}]=\fN(0,\sigma^2)$. The coefficient $\gamma$ adjusts for the fact that prior to the surveys conducted in 2004 photographs of sites were taken at oblique angles with handheld cameras, while in 2004 and after photographs were taken vertically at fixed altitude with medium format cameras. The medium format method produces higher counts on average than the oblique photo method. In this example, there are no replicated surveys, therefore, there is no information to estimate $\sigma$. Thus, we set it to a trivially small value $\approx 0$. Next, we model the $\Nij$ using the zero-inflated log-normal model:
+where $x_j$ is the indicator that $t_j < 2004$ and $\mathcal{L}$ represents a log-normal density function. The coefficient $\gamma$ adjusts for the fact that prior to the surveys conducted in 2004 photographs of sites were taken at oblique angles with handheld cameras, while in 2004 and after photographs were taken vertically at fixed altitude with medium format cameras. The medium format method produces higher counts on average than the oblique photo method. In this example, there are no replicated surveys, therefore, there is no information to estimate $\sigma$. Thus, we set it to a trivially small value $\approx 0$. 
+
+Next, we model the $\Nij$ using the zero-inflated log-normal model:
 \begin{equation}
-N_{ij} = \left\{
+[\Nij\ |\ \beta_{i0}, \beta_{i1}, \eta_{ij}] = \left\{
 	\begin{array}{ll}
-		\exp\{\beta_{i0} + \beta_{i1}t + \eta_{ij} + \delta_{ij}\} & \mbox{with prob. } p_{ij}\\
+		\mathcal{L}(\beta_{i0} + \beta_{i1}t + \eta_{ij}, \zeta^2) & \mbox{with prob. } p_{ij}\\
 		0 & \mbox{with prob. } 1-p_{ij}
 	\end{array}\right.,
 \end{equation}
-where $\beta_{i0}$ and $\beta_{i1}$ are regression coefficients, $[\boldsymbol{\eta}_i|\xi] = \fN(\mathbf{0},\xi\mathbf{Q})$ is a random walk of order 2 (RW2; see \citealt{} for a definition of the precision matrix $\mathbf{Q}$), and $[\boldsymbol{\delta}_i|\zeta] = \fN(\mathbf{0},\zeta\mathbf{I})$. 
-To complete the model, the zero-inflation probability was specified as:
+where $(\beta_{i0},\beta_{i1})$ are the linear growth parameters and $[\eta_{i1},\dots,\eta_{iT}|\xi] = \fN(\mathbf{0},\xi^2\mathbf{Q}^{-1})$ is a random walk of order 2 (RW2; see \citealt{} for a definition of the unscaled precision matrix $\mathbf{Q}$). The RW2 model is a smooth time series model similar to a thin-plate spline \citep{Speckman:2003xa}. Note, that the $\Nij$ model we used in this section did directly model dependence in the abundance but rather indirectly through the smooth RW2 times series $(\eta_{i1},\dots,\eta_{iT})$. A zero-inflated log-normal model was chosen rather than traditional count data models, e.g., Poisson or negative-binomial, for two reasons. First, it is the model that has been previously used when estimating regional wDPS trends \citep{} and we would like our results to be comparable. Second, and more importantly, sea lion survey sites can have substantial over {\em and} under inflation relative to the traditional count models. Under inflation occurs at big rookeries where year-to-year variation is often smaller than the average count due to breeding system of sea lions. Under this model we can interpret ``true abundance'' to mean the survey count of nonpups using the medium-format photography method. Thus, to account for the variability in counts in replicated surveys we use the posterior predictive distribution $[\Nij^{rep}\ |\ \mathbf{n}]$, to estimate growth trends.  
+
+To complete the model, the zero-inflation probability was modeled by:
 \begin{equation}
-\mbox{probit}(p_{ij}) = \theta_{i0} + \theta_{i1}t + \alpha_{ij},
+\mbox{probit}(p_{ij}) = \theta_{i0} + \theta_{i1}t ,
 \end{equation}
-where $\theta_{i0}$ and $\theta_{i1}$ are linear coefficients and $[\boldsymbol{\alpha}_i|\phi] = \fN(\mathbf{0},\phi\mathbf{Q})$ is also a RW2 random vector. 
+where $\theta_{i0}$ and $\theta_{i1}$ are linear coefficients. 
+
+Unfortunately, not all surveyed sites in the wDPS possessed enough data to estimate the parameters in the full version of the stated model. Therefore, we fitted the following abundance sub-models to sites with less than 11 positive ($\Nij>0$) counts. If the number of positive counts was in [0--5] we set $\beta_{i1}=0$ and $\eta_{ij}=0$, for all $j$, if the number of positive counts was in [6--10] we set $\eta_{ij}=0$, for all $j$, and if the number of positive counts was greater than 10 the full model was used. In addition, if all of the observed counts were positive the zero-inflation model was not used for that particular site (i.e., $p_{ij}=1$ for all $j$) and if the total number of surveys was less than 6 we set $\theta_{i1}=0$. To complete the specifics of the analysis we used the prior distributions $[\gamma]=\mathcal{N}(-0.039, 0.011^2)$, a flat distribution for each $[\beta_{i0}]$, $[\beta_{i1}] = \mathcal{N}(0,0.071^2)$, $[\xi^{-2}]=\mathcal{G}(0.5,0.0005)$ and $[\zeta^{-2}]=\mathcal{G}(0.5,0.0005)$ ($\mathcal{G}$ refers to a gamma distribution). The informative prior for $\gamma$ was derived from an oblique/medium-format pilot study in SE Alaska \citep{}. The informative prior distribution for each $\beta_{i1}$ was used to constrain average growth to be within $\pm20$\% per year, a more than reasonable constraint for a $K$-selected species. Lastly, A flat prior for the zero-inflation parameters, $[\theta_{i0},\theta_{i1}]$, was used. 
+
+For this analysis a burnin of 5,000 iterations was discarded then the MCMC sampler was run for 50,000 iterations. I retained every 5th iteration due to storage constraints for a total sample of 10,000 draws from the posterior predictive count at each site in each year. 
+
+
+
+
+\section{Case study: Harbor seal monitoring}
+
+Jay,... Insert Harbor seal trends here...
+
 
 
 
@@ -142,5 +172,14 @@ where $\theta_{i0}$ and $\theta_{i1}$ are linear coefficients and $[\boldsymbol{
 \nocite{*}
 
 \bibliography{trendsBiblio}
+\clearpage
+
+\begin{figure}[htbp] %  figure placement: here, top, bottom, or page
+   \centering
+   \includegraphics[width=0.9\textwidth]{wdpsNonpupsRegion2000-2012.png} 
+   \caption{Trends of Steller sea lion counts in the western Distinct Population Segment. The back line illustrates the posterior predictive median count. The gray envelope is the 90\% highest probability density prediction interval. The blue line is the median posterior predictive linear trend.}
+   \label{fig:example}
+\end{figure}
+
 
 \end{document}
