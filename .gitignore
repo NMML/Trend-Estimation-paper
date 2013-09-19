@@ -1,0 +1,13 @@
+.DS_Store
+.Rproj.user
+.Rhistory
+.RData
+*.Rproj
+*.aux
+*.bcf
+*.log
+*.out
+*.xml
+*.synctex.gz
+*.bbl
+*.blg
